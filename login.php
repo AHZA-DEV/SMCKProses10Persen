@@ -1,3 +1,34 @@
+<?php
+include_once 'function/auth.php';
+
+// Jika sudah login, redirect ke dashboard sesuai role
+if (isLoggedIn()) {
+    redirectByRole(getUserRole());
+}
+
+$error_message = '';
+$success_message = '';
+
+// Proses login
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    if (!empty($email) && !empty($password)) {
+        $result = login($email, $password);
+
+        if ($result['status'] === 'success') {
+            $success_message = $result['message'];
+            // Redirect sesuai role
+            redirectByRole($result['role']);
+        } else {
+            $error_message = $result['message'];
+        }
+    } else {
+        $error_message = 'Email dan password harus diisi';
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
   <head>
@@ -68,14 +99,13 @@
       <div class="max-w-7xl mx-auto px-6 py-4">
         <div class="flex items-center justify-between">
           <a
-            href="https://readdy.ai/home/010bfdc8-ec51-4719-9d6e-62d050c9c0de/da89052d-6a9b-47c9-b58e-3dc83c1662d5"
-            data-readdy="true"
+            href="index.php"
             class="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors"
           >
             <div class="w-8 h-8 flex items-center justify-center">
               <i class="ri-arrow-left-line text-xl"></i>
             </div>
-            <span class="index.php">Kembali</span>
+            <span>Kembali</span>
           </a>
           <div class="font-bold text-2xl text-primary">SMCK</div>
         </div>
@@ -100,12 +130,30 @@
               <p class="text-gray-600">Kelola cuti karyawan dengan mudah</p>
             </div>
 
-            <form id="loginForm" class="space-y-6">
+            <?php if ($error_message): ?>
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+                <div class="flex items-center">
+                    <i class="ri-error-warning-line mr-2"></i>
+                    <?php echo htmlspecialchars($error_message); ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if ($success_message): ?>
+            <div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm">
+                <div class="flex items-center">
+                    <i class="ri-check-line mr-2"></i>
+                    <?php echo htmlspecialchars($success_message); ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <form method="POST" action="" class="space-y-6">
               <div class="space-y-2">
                 <label
                   for="email"
                   class="block text-sm font-medium text-gray-700"
-                  >Email atau Username</label
+                  >Email atau NIP</label
                 >
                 <div class="relative">
                   <div
@@ -116,15 +164,15 @@
                     </div>
                   </div>
                   <input
-                    type="email"
+                    type="text"
                     id="email"
                     name="email"
                     required
+                    value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
                     class="input-field w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm"
-                    placeholder="Masukkan email atau username"
+                    placeholder="Masukkan email atau NIP"
                   />
                 </div>
-                <div id="emailError" class="text-red-500 text-xs hidden"></div>
               </div>
 
               <div class="space-y-2">
@@ -160,26 +208,29 @@
                     </div>
                   </div>
                 </div>
-                <div
-                  id="passwordError"
-                  class="text-red-500 text-xs hidden"
-                ></div>
               </div>
 
               <button
                 type="submit"
-                id="loginButton"
                 class="w-full bg-primary text-white py-3 px-4 !rounded-button hover:bg-blue-600 focus:ring-4 focus:ring-blue-200 transition-all duration-300 font-medium text-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Masuk
               </button>
             </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">
+                    Demo Login:<br>
+                    <strong>Admin:</strong> admin@perusahaan.com / password<br>
+                    <strong>Karyawan:</strong> budi.santoso@perusahaan.com / password
+                </p>
+            </div>
           </div>
         </div>
       </div>
     </main>
 
-    <script id="password-toggle">
+    <script>
       document.addEventListener("DOMContentLoaded", function () {
         const passwordInput = document.getElementById("password");
         const togglePassword = document.getElementById("togglePassword");
@@ -200,108 +251,6 @@
         });
       });
     </script>
-
-    <!-- <script id="form-validation">
-      document.addEventListener("DOMContentLoaded", function () {
-        const form = document.getElementById("loginForm");
-        const emailInput = document.getElementById("email");
-        const passwordInput = document.getElementById("password");
-        const emailError = document.getElementById("emailError");
-        const passwordError = document.getElementById("passwordError");
-        const loginButton = document.getElementById("loginButton");
-
-        function validateEmail(email) {
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          return emailRegex.test(email) || email.length >= 3;
-        }
-
-        function validatePassword(password) {
-          return password.length >= 8;
-        }
-
-        function showError(errorElement, message) {
-          errorElement.textContent = message;
-          errorElement.classList.remove("hidden");
-        }
-
-        function hideError(errorElement) {
-          errorElement.classList.add("hidden");
-        }
-
-        function validateForm() {
-          let isValid = true;
-
-          if (!validateEmail(emailInput.value)) {
-            showError(
-              emailError,
-              "Format email tidak valid atau username minimal 3 karakter"
-            );
-            emailInput.classList.add("border-red-300");
-            isValid = false;
-          } else {
-            hideError(emailError);
-            emailInput.classList.remove("border-red-300");
-          }
-
-          if (!validatePassword(passwordInput.value)) {
-            showError(passwordError, "Password minimal 8 karakter");
-            passwordInput.classList.add("border-red-300");
-            isValid = false;
-          } else {
-            hideError(passwordError);
-            passwordInput.classList.remove("border-red-300");
-          }
-
-          loginButton.disabled = !isValid;
-          return isValid;
-        }
-
-        emailInput.addEventListener("input", validateForm);
-        passwordInput.addEventListener("input", validateForm);
-
-        form.addEventListener("submit", function (e) {
-          e.preventDefault();
-
-          if (validateForm()) {
-            loginButton.textContent = "Memproses...";
-            loginButton.disabled = true;
-
-            setTimeout(() => {
-              alert(
-                "Login berhasil! Selamat datang di Sistem Manajemen Cuti Karyawan."
-              );
-              loginButton.textContent = "Masuk";
-              loginButton.disabled = false;
-            }, 1500);
-          }
-        });
-      });
-    </script>
-
-    <script id="register-link">
-      document.addEventListener("DOMContentLoaded", function () {
-        const registerLink = document.querySelector('a[href="#"]:last-of-type');
-        registerLink.addEventListener("click", function (e) {
-          e.preventDefault();
-          alert(
-            "Halaman pendaftaran akan segera tersedia. Silakan hubungi administrator untuk membuat akun baru."
-          );
-        });
-
-        const forgotPasswordLink = document.querySelector(
-          'a[href="#"]:first-of-type'
-        );
-        forgotPasswordLink.addEventListener("click", function (e) {
-          e.preventDefault();
-          alert(
-            "Link reset password telah dikirim ke email Anda (jika email terdaftar dalam sistem)."
-          );
-        });
-      });
-    </script> -->
-
-
-    
     <script>
       !(function (t, e) {
         var o, n, p, r;
@@ -340,7 +289,7 @@
                   return u.toString(1) + ".people (stub)";
                 },
                 o =
-                  "init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(
+                  "init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(
                     " "
                   ),
                 n = 0;

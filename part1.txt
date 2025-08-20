@@ -1,0 +1,5 @@
+:  Uncaught Error: Call to undefined function renderSidebar() in C:\xampp\htdocs\adminTemplate\PHP-Web-Server\layout\sidebar.php:28
+Stack trace:
+#0 C:\xampp\htdocs\adminTemplate\PHP-Web-Server\pages\admin\dashboard\view.php(24): include()
+#1 {main}
+  thrown in 
