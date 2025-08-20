@@ -1,7 +1,4 @@
-
-<!-- Mobile Sidebar Overlay -->
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-
+<!-- ======================================== -->
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -14,90 +11,58 @@
         </div>
     </div>
 
-    <div class="sidebar-category">
-        <h6>Menu</h6>
+    <div class="sidebar-menu">
         <ul class="nav flex-column">
-            
             <?php if ($_SESSION['user_role'] == 'admin') : ?>
-                <!-- Menu Admin -->
                 <li class="nav-item">
-                    <a href="dashboard.php?page=dashboard" class="nav-link">
-                        <i class="bi bi-grid-fill"></i>
+                    <a href="dashboard.html" class="nav-link active">
+                        <i class="fas fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-                
                 <li class="nav-item">
-                    <a href="dashboard.php?page=karyawan" class="nav-link">
-                        <i class="bi bi-people-fill"></i>
-                        <span>Karyawan</span>
+                    <a href="account.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>Your Account</span>
+                        <i class="fas fa-chevron-right ms-auto"></i>
                     </a>
                 </li>
-                
-                <li class="nav-item">
-                    <a href="dashboard.php?page=departemen" class="nav-link">
-                        <i class="bi bi-building"></i>
-                        <span>Departemen</span>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="dashboard.php?page=cuti" class="nav-link">
-                        <i class="bi bi-calendar-check"></i>
-                        <span>Cuti</span>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="dashboard.php?page=laporan" class="nav-link">
-                        <i class="bi bi-bar-chart"></i>
-                        <span>Laporan</span>
-                    </a>
-                </li>
-                
             <?php else : ?>
-                <!-- Menu Karyawan -->
+                <!-- KARYAWAN -->
                 <li class="nav-item">
-                    <a href="dashboard.php?page=dashboard" class="nav-link">
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard</span>
+                    <a href="users.html" class="nav-link active">
+                        <i class="fas fa-users"></i>
+                        <span>Users</span>
+                        <i class="fas fa-chevron-right ms-auto"></i>
                     </a>
                 </li>
-                
                 <li class="nav-item">
-                    <a href="dashboard.php?page=cuti-karyawan" class="nav-link">
-                        <i class="bi bi-calendar-check"></i>
-                        <span>Cuti Saya</span>
+                    <a href="settings.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                        <i class="fas fa-chevron-right ms-auto"></i>
                     </a>
                 </li>
-                
                 <li class="nav-item">
-                    <a href="dashboard.php?page=kalender" class="nav-link">
-                        <i class="bi bi-calendar"></i>
-                        <span>Kalender</span>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Reports</span>
+                        <i class="fas fa-chevron-right ms-auto"></i>
                     </a>
                 </li>
-                
                 <li class="nav-item">
-                    <a href="dashboard.php?page=riwayat" class="nav-link">
-                        <i class="bi bi-clock-history"></i>
-                        <span>Riwayat Cuti</span>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                        <i class="fas fa-chevron-right ms-auto"></i>
                     </a>
                 </li>
-                
-                <li class="nav-item">
-                    <a href="dashboard.php?page=profile" class="nav-link">
-                        <i class="bi bi-person"></i>
-                        <span>Profil Saya</span>
-                    </a>
-                </li>
-                
             <?php endif ?>
         </ul>
 
         <!-- Logout Section -->
         <div class="sidebar-logout">
-            <a href="logout.php" class="nav-link logout-link">
+            <a href="./logout.php" class="nav-link logout-link">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Logout</span>
             </a>

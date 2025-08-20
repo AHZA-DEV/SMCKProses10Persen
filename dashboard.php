@@ -13,11 +13,10 @@ include_once 'function/menu.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Manajemen Cuti Karyawan</title>
+    <title>Soft UI Admin Dashboard</title>
 
     <!-- Bootstrap CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -40,7 +39,9 @@ include_once 'function/menu.php';
 
         <!-- Page Content -->
         <div class="container-fluid py-3">
-            <?php include_once 'function/menu.php'; ?>
+            <div class="row">
+                <?php include_once 'function/menu.php'; ?>  
+            </div>
         </div>
     </div>
 
@@ -53,5 +54,4 @@ include_once 'function/menu.php';
     <!-- Dashboard JS -->
     <script src="assets/js/dashboard.js"></script>
 </body>
-
 </html>
