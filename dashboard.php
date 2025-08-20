@@ -9,7 +9,7 @@ if (!isLoggedIn()) {
 }
 
 // Include menu function untuk routing
-include_once 'function/menu.php';
+// include_once 'function/menu.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
